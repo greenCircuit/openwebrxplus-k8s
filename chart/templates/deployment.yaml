@@ -19,8 +19,11 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            privileged: true       
+          resources:
+            requests:
+              akri.sh/akri-sdr: "1"
+            limits:
+              akri.sh/akri-sdr: "1"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -34,12 +37,12 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          volumeMounts:
-            - name: usb-devices
-              mountPath: {{ .Values.usbPath }} 
-              readOnly: true
-      volumes:
-        - name: usb-devices
-          hostPath:
-            path: {{ .Values.usbPath }} 
-            type: Directory
+      #     volumeMounts:
+      #       - name: usb-devices
+      #         mountPath: {{ .Values.usbPath }} 
+      #         readOnly: true
+      # volumes:
+      #   - name: usb-devices
+      #     hostPath:
+      #       path: {{ .Values.usbPath }} 
+      #       type: Directory
