@@ -1,0 +1,15 @@
+image:
+  repository: docker.io/slechev/openwebrxplus-softmbe
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+
+usbPath: /dev/bus/usb
+user: myuser
+password: password
+timeZone: Europe/Greenwich
+
+service:
+  type: NodePort
+  port: 8073

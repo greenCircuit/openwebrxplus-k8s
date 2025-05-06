@@ -1,1 +1,2 @@
-# openwebrxplus-k8s
+# About 
+Deploying openwebrxplux inside k8s using helm chart 

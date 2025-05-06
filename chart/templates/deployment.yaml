@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openwebrx
+  labels:
+    app: openwebrx
+spec:
+  selector:
+    matchLabels:
+      app: openwebrx
+  template:
+    metadata:
+      labels:
+        app: openwebrx
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            privileged: true       
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: {{ .Values.timeZone }} 
+            - name: OPENWEBRX_ADMIN_USER
+              value: {{ .Values.user }}
+            - name: OPENWEBRX_ADMIN_PASSWORD
+              value: {{ .Values.password }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: usb-devices
+              mountPath: {{ .Values.usbPath }} 
+              readOnly: true
+      volumes:
+        - name: usb-devices
+          hostPath:
+            path: {{ .Values.usbPath }} 
+            type: Directory
