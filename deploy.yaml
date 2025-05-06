@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owrx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: owrx
+  template:
+    metadata:
+      labels:
+        app: owrx
+    spec:
+      containers:
+        - name: owrx
+          securityContext:
+            privileged: true
+          image: docker.io/slechev/openwebrxplus-softmbe:latest
+          ports:
+            - containerPort: 8073
+          env:
+            - name: TZ
+              value: "Europe/Sofia"
+            - name: OPENWEBRX_ADMIN_USER
+              value: "myuser"
+            - name: OPENWEBRX_ADMIN_PASSWORD
+              value: "password"
+          volumeMounts:
+            - name: usb-devices
+              mountPath: /dev/bus/usb
+              readOnly: true
+      volumes:
+        - name: usb-devices
+          hostPath:
+            path: /dev/bus/usb
+            type: Directory
