@@ -21,10 +21,10 @@ spec:
         - name: {{ .Chart.Name }}
           resources:
             requests:
-              akri.sh/akri-sdr: "1"
+              akri.sh/{{ .Values.akriConfig.configurationName }}: "1"
             limits:
-              akri.sh/akri-sdr: "1"
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              akri.sh/{{ .Values.akriConfig.configurationName }}: "1"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: TZ
@@ -37,12 +37,3 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-      #     volumeMounts:
-      #       - name: usb-devices
-      #         mountPath: {{ .Values.usbPath }} 
-      #         readOnly: true
-      # volumes:
-      #   - name: usb-devices
-      #     hostPath:
-      #       path: {{ .Values.usbPath }} 
-      #       type: Directory

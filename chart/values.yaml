@@ -5,7 +5,6 @@ image:
 
 imagePullSecrets: []
 
-usbPath: /dev/bus/usb
 user: myuser
 password: password
 timeZone: Europe/Greenwich
@@ -13,3 +12,13 @@ timeZone: Europe/Greenwich
 service:
   type: NodePort
   port: 8073
+
+# config how we handle usb devices
+akriConfig:
+  configurationName: akri-sdr
+  # use lsusb to get this config, openweberx supports more devices, but didn't have them available
+  # Ex. rtl-sdr: Bus 001 Device 009: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
+  usbDevices:  
+    # rtl-srd config
+    - idVendor: 0bda
+      idProduct: "2838"

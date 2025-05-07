@@ -1,12 +1,14 @@
 apiVersion: akri.sh/v0
 kind: Configuration
 metadata:
-  name: akri-sdr
+  name: {{ .Values.akriConfig.configurationName }}
 spec:
   capacity: 1
   discoveryHandler:
     discoveryDetails: |
       groupRecursive: true # Recommended unless using very exact udev rules
       udevRules:
-      - ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2838"
+      {{- range .Values.akriConfig.usbDevices }}
+      - ATTRS{idVendor}=="{{ .idVendor }}", ATTRS{idProduct}=="{{ .idProduct }}"
+      {{- end}}
     name: udev
