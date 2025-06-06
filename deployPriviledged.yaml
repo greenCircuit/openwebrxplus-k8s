@@ -1,3 +1,4 @@
+# siple deployments that will 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,3 +36,17 @@ spec:
           hostPath:
             path: /dev/bus/usb
             type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openwebrx-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8073
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: owrx

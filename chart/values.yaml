@@ -13,7 +13,7 @@ service:
   type: NodePort
   port: 8073
 
-# config how we handle usb devices
+# config how we handle and discover usb devices
 akriConfig:
   configurationName: akri-sdr
   # use lsusb to get this config, openweberx supports more devices, but didn't have them available

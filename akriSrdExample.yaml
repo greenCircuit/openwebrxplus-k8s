@@ -1,0 +1,68 @@
+---
+# Source: openwebrx/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: openwebrx-svc
+spec:
+  type: NodePort
+  ports:
+    - port: 8073
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: openwebrx
+---
+# Source: openwebrx/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openwebrx
+  labels:
+    app: openwebrx
+spec:
+  selector:
+    matchLabels:
+      app: openwebrx
+  template:
+    metadata:
+      labels:
+        app: openwebrx
+    spec:
+      containers:
+        - name: openwebrx
+          resources:
+            requests:
+              akri.sh/akri-sdr: "1"
+            limits:
+              akri.sh/akri-sdr: "1"
+          image: "docker.io/slechev/openwebrxplus-softmbe:latest"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Europe/Greenwich 
+            - name: OPENWEBRX_ADMIN_USER
+              value: myuser
+            - name: OPENWEBRX_ADMIN_PASSWORD
+              value: password
+          ports:
+            - name: http
+              containerPort: 8073
+              protocol: TCP
+---
+# Source: openwebrx/templates/akri.yaml
+apiVersion: akri.sh/v0
+kind: Configuration
+metadata:
+  name: akri-sdr
+spec:
+  capacity: 1
+  discoveryHandler:
+    discoveryDetails: |
+      # add your devices to this config for yor
+      groupRecursive: true # Recommended unless using very exact udev rules
+      udevRules:
+      - ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2838"
+      - ATTRS{idVendor}=="0bdc", ATTRS{idProduct}=="2830"
+    name: udev
